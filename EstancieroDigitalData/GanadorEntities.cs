@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace EstancieroDigitalData
 {
-    public class CasilleroAdquiridoEntities
+    public class GanadorEntities
     {
+        public int DNI { get; set; }
+        public string MotivoVictoria { get; set; }
     }
 }

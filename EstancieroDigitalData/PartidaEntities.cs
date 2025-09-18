@@ -13,8 +13,10 @@ namespace EstancieroDigitalData
         public DateTime? FechaFin { get; set; }
         public double Duracion { get; set; }
         public string Estado { get; set; }
-        public int TurnoActual { get; set; }
+        public TurnoEntities TurnoActual { get; set; }
         public List<TurnoEntities> ConfiguracionTurno { get; set; } = new List<TurnoEntities>();
-        public List<CasilleroAdquiridoEntities> CasillerosComprados { get; set; } = new List<CasilleroAdquiridoEntities>();
+        public List<JugadorActualEntities> DetallePartida { get; set; } = new List<JugadorActualEntities>();
+        public UsuarioEntities? Ganador { get; set; }
+        public string? MotivoVictoria { get; set; }
     }
 }

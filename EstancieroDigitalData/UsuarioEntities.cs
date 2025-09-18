@@ -11,6 +11,6 @@ namespace EstancieroDigitalData
         public int DNI { get; set; }
         public string Nombre { get; set; }
         public string Email { get; set; }
-        public List<Estadisticas> Estadisticas { get; set; } = new List<Estadisticas>();
+        public List<EstadisticaEntities> EstadisticaJugador { get; set; } = new List<EstadisticaEntities>();
     }
 }

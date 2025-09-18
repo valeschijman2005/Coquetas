@@ -8,6 +8,8 @@ namespace EstancieroDigitalData
 {
     public class TurnoEntities
     {
-
+        public int NumeroTurno { get; set; }
+        public int DniJugador { get; set; }
+        public int NumeroPartida { get; set; }
     }
 }

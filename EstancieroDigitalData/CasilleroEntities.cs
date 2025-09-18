@@ -8,5 +8,12 @@ namespace EstancieroDigitalData
 {
     public abstract class CasilleroEntities
     {
+        public int NumeroCasillero { get; set; }
+        public string? NombreProvincia { get; set; }
+        public string TipoCasillero { get; set; }
+        public double? PrecioCompra { get; set; }
+        public double? PrecioAlquiler { get; set; }
+        public double Monto { get; set; }
+        public int? DniPropietario { get; set; }
     }
 }
