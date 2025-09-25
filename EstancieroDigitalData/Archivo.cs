@@ -10,20 +10,107 @@ namespace EstancieroDigitalData
 {
     public static class Archivo
     {
-        public static async Task GuardarAsync<T>(string ruta, T datos)
+        private static readonly string DirectorioBase = "../EstancieroDigitalData/Datos";
+        private static readonly string ArchivoUsuarios = "usuarios.json";
+        private static readonly string ArchivoPartidas = "partidas.json";
+        private static readonly string ArchivoTablero = "tablero-configuracion.json";
+
+        public static UsuarioEntities AgregarUsuario(UsuarioEntities usuario)
         {
-            var opciones = new JsonSerializerOptions { WriteIndented = true };
-            using FileStream stream = new FileStream(ruta, FileMode.Create, FileAccess.Write, FileShare.None);
-            await JsonSerializer.SerializeAsync(stream, datos, opciones);
+            var lista = LeerUsuariosDesdeArchivoJson();
+
+            var usuarioExistente = lista.FirstOrDefault(u => u.DNI == usuario.DNI);
+
+            if (usuarioExistente != null)
+            {
+                usuarioExistente.EstadisticaJugador = usuario.EstadisticaJugador;
+            }
+            else
+            {
+                lista.Add(usuario);
+            }
+
+            GuardarUsuariosEnArchivoJson(lista);
+            return usuario;
         }
-
-        public static async Task<T?> LeerAsync<T>(string ruta)
+        public static List<UsuarioEntities> LeerUsuariosDesdeArchivoJson()
         {
-            if (!File.Exists(ruta))
-                return default;
+            string rutaCompleta = ObtenerRutaCompleta(ArchivoUsuarios);
 
-            using FileStream stream = new FileStream(ruta, FileMode.Open, FileAccess.Read, FileShare.Read);
-            return await JsonSerializer.DeserializeAsync<T>(stream);
+            if (File.Exists(rutaCompleta))
+            {
+               string json = File.ReadAllText(rutaCompleta);
+                if (!string.IsNullOrWhiteSpace(json))
+                {
+                    return JsonConvert.DeserializeObject<List<UsuarioEntities>>(json) ?? new List<UsuarioEntities>();
+                } 
+            }
+
+            return new List<UsuarioEntities>();
+        }
+        private static void GuardarUsuariosEnArchivoJson(List<UsuarioEntities> usuarios)
+        {
+            GuardarEnArchivo(usuarios, ArchivoUsuarios);
+        }
+        public static PartidaEntities AgregarPartida(PartidaEntities partida)
+        {
+            var lista = LeerPartidasDesdeArchivoJson();
+
+            var partidaExistente = lista.FirstOrDefault(p => p.NumeroPartida == partida.NumeroPartida);
+
+            if (partidaExistente != null)
+            {
+                var index = lista.IndexOf(partidaExistente);
+                lista[index] = partida;
+            }
+            else
+            {
+                if (partida.NumeroPartida == null)
+                {
+                    partida.NumeroPartida = lista.Any() ? lista.Max(p => p.NumeroPartida) + 1 : 1;
+                    partida.FechaInicio = DateTime.Now;
+                    partida.Estado = "En Juego";
+                }
+
+                lista.Add(partida);
+            }
+
+            GuardarPartidasEnArchivoJson(lista);
+            return partida;
+        }
+        public static List<PartidaEntities> LeerPartidasDesdeArchivoJson()
+        {
+            string rutaCompleta = ObtenerRutaCompleta(ArchivoPartidas);
+
+            if (File.Exists(rutaCompleta))
+            {
+                string json = File.ReadAllText(rutaCompleta);
+                if (!string.IsNullOrWhiteSpace(json))
+                {
+                    return JsonConvert.DeserializeObject<List<PartidaEntities>>(json) ?? new List<PartidaEntities>();
+                } 
+            }
+
+            return new List<PartidaEntities>();
+        }
+        private static void GuardarPartidasEnArchivoJson(List<PartidaEntities> partidas)
+        {
+            GuardarEnArchivo(partidas, ArchivoPartidas);
+        }
+        private static string ObtenerRutaCompleta(string nombreArchivo)
+        {
+            string rutaCompleta = Path.Combine(DirectorioBase, nombreArchivo);
+            return Path.GetFullPath(rutaCompleta);
+        }
+        private static void GuardarEnArchivo<T>(T objeto, string nombreArchivo)
+        {
+
+            string rutaCompleta = ObtenerRutaCompleta(nombreArchivo);
+
+            Directory.CreateDirectory(Path.GetDirectoryName(rutaCompleta) ?? DirectorioBase);
+
+            string json = JsonConvert.SerializeObject(objeto, Formatting.Indented);
+            File.WriteAllText(rutaCompleta, json);
         }
     }
 }
