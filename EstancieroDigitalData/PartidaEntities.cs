@@ -15,7 +15,7 @@ namespace EstancieroDigitalData
         public string Estado { get; set; }
         public TurnoEntities TurnoActual { get; set; }
         public List<TurnoEntities> ConfiguracionTurno { get; set; } = new List<TurnoEntities>();
-        public List<JugadorActualEntities> DetallePartida { get; set; } = new List<JugadorActualEntities>();
+        public List<DetallePartidaEntities> DetallePartida { get; set; } 
         public UsuarioEntities? Ganador { get; set; }
         public string? MotivoVictoria { get; set; }
     }

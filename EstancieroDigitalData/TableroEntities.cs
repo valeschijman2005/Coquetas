@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EstancieroDigitalData
 {
-    public abstract class CasilleroEntities
+    public abstract class TableroEntities
     {
         public int NumeroCasillero { get; set; }
         public string? NombreProvincia { get; set; }
