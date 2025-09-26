@@ -10,10 +10,10 @@ namespace EstancieroDigitalData
 {
     public static class Archivo
     {
-        private static readonly string DirectorioBase = "../EstancieroDigitalData/Datos";
+        private static readonly string DirectorioBase = "../EstancieroDigitalData/Archivosjson";
         private static readonly string ArchivoUsuarios = "usuarios.json";
         private static readonly string ArchivoPartidas = "partidas.json";
-        private static readonly string ArchivoTablero = "tablero-configuracion.json";
+        private static readonly string ArchivoTablero = "Tablero.json";
 
         public static UsuarioEntities AgregarUsuario(UsuarioEntities usuario)
         {
@@ -111,6 +111,19 @@ namespace EstancieroDigitalData
 
             string json = JsonConvert.SerializeObject(objeto, Formatting.Indented);
             File.WriteAllText(rutaCompleta, json);
+        }
+        public static List<TableroEntities> ObtenerTableroDesdeJson()
+        {
+            string rutaCompleta = ObtenerRutaCompleta(ArchivoTablero);
+            if (File.Exists(rutaCompleta))
+            {
+                string json = File.ReadAllText(rutaCompleta);
+                if (!string.IsNullOrWhiteSpace(json))
+                {
+                    return JsonConvert.DeserializeObject<List<TableroEntities>>(json) ?? new List<TableroEntities>();
+                } 
+            }
+            return new List<TableroEntities>();
         }
     }
 }
